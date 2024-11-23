@@ -6,9 +6,8 @@ import { routes } from "./src/routes/postsRoutes.js";
 // Cria uma instância do Express, que será o núcleo da nossa aplicação.
 const app = express();
 
-// Habilita o middleware para que o Express possa entender requisições com corpo no formato JSON.
 app.use(express.json());
-
+app.use(express.static("uploads"));
 // Inicia o servidor na porta 3000 e exibe uma mensagem no console quando o servidor estiver pronto.
 app.listen(3000, () => {
   console.log("Servidor rodando: http://localhost:3000");
