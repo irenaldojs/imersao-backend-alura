@@ -1,55 +1,18 @@
+// Importa o framework Express para criar a aplicação web.
 import express from "express";
+// Importa as rotas definidas em postsRoutes.js.
+import { routes } from "./src/routes/postsRoutes.js";
 
-const posts = [
-  {
-    id: 1,
-    descricao: "Uma foto teste",
-    imagem: "https://placecats.com/millie/300/300",
-  },
-  {
-    id: 2,
-    descricao: "Gato preguiçoso tomando sol",
-    imagem: "https://placecats.com/millie/300/300",
-  },
-  {
-    id: 3,
-    descricao: "Gatinho curioso explorando a caixa",
-    imagem: "https://placecats.com/millie/300/300",
-  },
-  {
-    id: 4,
-    descricao: "Dois gatos brincando de bola",
-    imagem: "https://placecats.com/millie/300/300",
-  },
-  {
-    id: 5,
-    descricao: "Gata ronronando no colo",
-    imagem: "https://placecats.com/millie/300/300",
-  },
-  {
-    id: 6,
-    descricao: "Gato comendo ração",
-    imagem: "https://placecats.com/millie/300/300",
-  },
-];
-
+// Cria uma instância do Express, que será o núcleo da nossa aplicação.
 const app = express();
 
+// Habilita o middleware para que o Express possa entender requisições com corpo no formato JSON.
 app.use(express.json());
 
+// Inicia o servidor na porta 3000 e exibe uma mensagem no console quando o servidor estiver pronto.
 app.listen(3000, () => {
-  console.log("Servidor rodando na porta 3000");
+  console.log("Servidor rodando: http://localhost:3000");
 });
 
-app.get("/posts", (req, res) => {
-  res.status(200).json(posts);
-});
-
-function buscarPostPorId(id) {
-  return posts.findIndex((post) => post.id.toString() === id);
-}
-
-app.get("/posts/:id", (req, res) => {
-  const index = buscarPostPorId(req.params.id);
-  res.status(200).json(posts[index]);
-});
+// Chama as rotas definidas em postsRoutes.js.
+routes(app);
