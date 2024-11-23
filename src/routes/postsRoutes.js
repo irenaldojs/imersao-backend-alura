@@ -1,4 +1,6 @@
 import multer from "multer";
+import express from "express";
+import cors from "cors";
 import {
   listarPosts,
   postarNovoPost,
@@ -6,6 +8,10 @@ import {
   atualizarNovoPost,
 } from "../controllers/postController.js";
 
+const corsOptions = {
+  origin: "http://localhost:8000",
+  optionsSuccessStatus: 200,
+};
 // Somente se usar o Windows
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -21,6 +27,10 @@ const upload = multer({ dest: "./uploads", storage });
 
 // Cria uma instância do Express, que será o núcleo da nossa aplicação.
 const routes = (app) => {
+  app.use(express.json());
+  app.use(express.static("uploads"));
+  app.use(cors(corsOptions));
+
   // Define uma rota GET para obter todos os posts.
   app.get("/posts", listarPosts);
   // Define uma rota POST para criar um novo post.

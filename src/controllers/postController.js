@@ -1,9 +1,10 @@
+import fs from "fs";
 import {
   getTodosPosts,
   criarNovoPost,
   atualizaPost,
 } from "../models/postsModel.js";
-import fs from "fs";
+import gerarDescricaoComGemini from "../services/geminiService.js";
 
 export async function listarPosts(req, res) {
   try {
@@ -76,15 +77,16 @@ export async function atualizarNovoPost(req, res) {
   const id = req.params.id;
   const urlImagem = `http://localhost:3000/${id}.png`;
 
-  const post = {
-    imgUrl: urlImagem,
-    descricao: req.body.descricao,
-    alt: req.body.alt,
-  };
-
   try {
-    // Chama a função 'criarNovoPost' para criar um novo post com base no corpo da requisição.
+    const imgBuffer = fs.readFileSync(`./uploads/${id}.png`);
+    const descricao = await gerarDescricaoComGemini(imgBuffer);
 
+    const post = {
+      imgUrl: urlImagem,
+      descricao: descricao,
+      alt: req.body.alt,
+    };
+    // Chama a função 'criarNovoPost' para criar um novo post com base no corpo da requisição.
     const postAtualizado = await atualizaPost(id, post);
 
     // Envia uma resposta HTTP com status 201 (Criado) e o novo post criado no formato JSON.
