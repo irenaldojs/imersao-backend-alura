@@ -1,6 +1,7 @@
-import { getTodosPosts } from "../models/postsModel.js";
+import { getTodosPosts, criarNovoPost } from "../models/postsModel.js";
+import fs from "fs";
 
-async function listarPosts(req, res) {
+export async function listarPosts(req, res) {
   try {
     // Chama a função getTodosPosts para obter todos os posts.
     const posts = await getTodosPosts();
@@ -18,4 +19,50 @@ async function listarPosts(req, res) {
   }
 }
 
-export { listarPosts };
+export async function postarNovoPost(req, res) {
+  // Obtem o corpo da requisição (req.body) e armazena-o na variável 'novoPost'.
+  const novoPost = req.body;
+
+  try {
+    // Chama a função 'criarNovoPost' para criar um novo post com base no corpo da requisição.
+    const postCriado = await criarNovoPost(novoPost);
+
+    // Envia uma resposta HTTP com status 201 (Criado) e o novo post criado no formato JSON.
+    res.status(201).json(postCriado);
+  } catch (error) {
+    // Lida com exceções e envia uma resposta HTTP com status 500 (Erro do Servidor Interno).
+    console.error(error);
+    // Envia uma resposta HTTP com status 500 (Erro do Servidor Interno) e uma mensagem de erro.
+    res
+      .status(500)
+      .json({ error: "Falha na criação do post", message: "error.message" });
+  }
+}
+
+export async function uploadImagem(req, res) {
+  // Cria um novo post com as informações fornecidas na requisição.
+  const novoPost = {
+    descricao: "",
+    // Armazena o nome do arquivo de imagem no campo 'imgUrl'.
+    imgUrl: req.file.originalname,
+    alt: "",
+  };
+
+  try {
+    // Chama a função 'criarNovoPost' para criar um novo post com base no corpo da requisição.
+    const postCriado = await criarNovoPost(novoPost);
+    // Renomeia o arquivo de imagem para incluir o ID do post criado.
+    const imagemAtualizada = `uploads/${postCriado.insertedId}.png`;
+    // Renomeia o arquivo de imagem para incluir o ID do post criado.
+    fs.renameSync(req.file.path, imagemAtualizada);
+    // Envia uma resposta HTTP com status 200 (OK) e o novo post criado no formato JSON.
+    res.status(201).json(postCriado);
+  } catch (erro) {
+    // Lida com exceções e envia uma resposta HTTP com status 500 (Erro do Servidor Interno).
+    console.error(erro.message);
+    // Envia uma resposta HTTP com status 500 (Erro do Servidor Interno) e uma mensagem de erro.
+    res
+      .status(500)
+      .json({ Erro: "Falha na requisição", message: erro.message });
+  }
+}

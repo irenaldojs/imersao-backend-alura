@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "imersao-instabyte",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -19,8 +19,8 @@
   "keywords": [],
   "author": {
     "name": "",
-    "email": "",
-    "url": ""
+    "email": "irenaldojs@gmail.com",
+    "url": "https://www.linkedin.com/in/irenaldo-júnior-da-silva/"
   },
   "contributors": [],
   "scripts": {
@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "express": "^4.21.1",
-    "mongodb": "^6.11.0"
+    "mongodb": "^6.11.0",
+    "multer": "^1.4.5-lts.1"
   }
 }
